@@ -1,3 +1,11 @@
+/* index.css */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+/* Importación de estilos de react-toastify */
+@import url('https://unpkg.com/react-toastify/dist/ReactToastify.css');
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
