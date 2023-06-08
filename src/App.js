@@ -68,7 +68,7 @@ function App() {
     try {
       toast.info('Cargando registros...'); // Mostrar mensaje de carga
 
-      const response = await axios.get('http://13.59.10.126:8000/lista/');
+      const response = await axios.get('http://127.0.0.1:8000/lista/');
       const data = response.data;
       console.log(data); // Mostrar los datos en la consola
 
@@ -93,7 +93,7 @@ function App() {
       setSelectedCliente(null); // Reset the selectedCliente state
 
       // Make an API call to fetch the client data based on the ID
-      const response = await axios.get(`http://13.59.10.126:8000/editar/${id}/`);
+      const response = await axios.get(`http://127.0.0.1:8000/editar/${id}/`);
       const data = response.data;
 
 
@@ -113,7 +113,7 @@ function App() {
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        const response = await axios.get('http://13.59.10.126:8000/get-csrf-token/', {
+        const response = await axios.get('http://127.0.0.1:8000/get-csrf-token/', {
           withCredentials: true,
         });
         const data = response.data;
@@ -159,7 +159,7 @@ function App() {
 
     // Realizar la llamada a la API para actualizar los datos del cliente
     axios
-      .put(`http://13.59.10.126:8000/actualizar/${id}/`, clienteData, {
+      .put(`http://127.0.0.1:8000/actualizar/${id}/`, clienteData, {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken,
@@ -199,7 +199,7 @@ function App() {
     if (confirmDelete) {
       // Realizar la consulta a la API para eliminar el cliente con el ID proporcionado
       axios
-        .put(`http://13.59.10.126:8000/eliminar/${id}/`, null, {
+        .put(`http://127.0.0.1:8000/eliminar/${id}/`, null, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,
