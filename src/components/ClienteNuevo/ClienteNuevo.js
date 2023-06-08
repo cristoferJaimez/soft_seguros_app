@@ -41,7 +41,7 @@ function ClienteNuevo() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       axios
-        .post('http://127.0.0.1:3000/crear/', values)
+        .post('http://127.0.0.1:8000/crear/', values)
         .then((response) => {
           toast.success('Formulario enviado');
           
