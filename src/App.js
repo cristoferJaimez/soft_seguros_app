@@ -34,6 +34,27 @@ function App() {
   const [searchValue, setSearchValue] = useState('');
   const [selectedCliente, setSelectedCliente] = useState(null);
 
+  const [csrfToken, setCsrfToken] = useState('');
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get('http://13.59.10.126:8000/get-csrf-token/', {
+          withCredentials: true,
+        });
+        const data = response.data;
+        console.log(data);
+        const token = data.csrfToken;
+        setCsrfToken(token);
+      } catch (error) {
+        console.error('Error al obtener el token CSRF:', error);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []);
+
+
   const parseFechaCreacion = (fecha) => {
     const parts = fecha.split('/');
     const day = parseInt(parts[0], 10);
@@ -68,7 +89,12 @@ function App() {
     try {
       toast.info('Cargando registros...'); // Mostrar mensaje de carga
 
-      const response = await axios.get('http://13.59.10.126:8000/lista/');
+      const response = await axios.get('http://13.59.10.126:8000/lista/', {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+      });
       const data = response.data; 
       console.log(data); // Mostrar los datos en la consola
 
@@ -93,7 +119,12 @@ function App() {
       setSelectedCliente(null); // Reset the selectedCliente state
 
       // Make an API call to fetch the client data based on the ID
-      const response = await axios.get(`http://13.59.10.126:8000/editar/${id}/`);
+      const response = await axios.get(`http://13.59.10.126:8000/editar/${id}/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+      });
       const data = response.data;
 
 
@@ -108,26 +139,7 @@ function App() {
   };
 
 
-  const [csrfToken, setCsrfToken] = useState('');
-
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await axios.get('http://13.59.10.126:8000/get-csrf-token/', {
-          withCredentials: true,
-        });
-        const data = response.data;
-        console.log(data);
-        const token = data.csrfToken;
-        setCsrfToken(token);
-      } catch (error) {
-        console.error('Error al obtener el token CSRF:', error);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []);
-
+  
 
 
   const handleUpdateCliente = (id) => {
@@ -160,10 +172,7 @@ function App() {
     // Realizar la llamada a la API para actualizar los datos del cliente
     axios
       .put(`http://13.59.10.126:8000/actualizar/${id}/`, clienteData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken,
-        },
+        
       })
       .then((response) => {
         if (response.status === 200) {
@@ -190,16 +199,14 @@ function App() {
       });
   };
 
-
-
-
   const handleDelete = (id) => {
     const confirmDelete = window.confirm('¿Está seguro de que desea eliminar este cliente?');
 
     if (confirmDelete) {
+      console.log(id);
       // Realizar la consulta a la API para eliminar el cliente con el ID proporcionado
       axios
-        .put(`13.59.10.126/eliminar/${id}/`, null, {
+        .put(`http://13.59.10.126:8000/eliminar/${id}/`, null, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,
@@ -225,6 +232,9 @@ function App() {
         });
     }
   };
+
+
+  
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
@@ -284,7 +294,9 @@ function App() {
           sx={{
             width: '80%',
             marginBottom: '10px',
-            marginTop : '-8%'
+            marginTop : '-8%',
+            height: '400px', // Ajusta la altura según tus necesidades
+            overflow: 'auto', // Activa el desplazamiento vertical
           }}
         >
           <CardContent
